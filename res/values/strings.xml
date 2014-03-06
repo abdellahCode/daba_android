@@ -17,5 +17,6 @@
     <string name="show_zoom">Show Zoom</string>
     <string name="flash">Flash</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_video_set_data">VideoSetData</string>
 
 </resources>

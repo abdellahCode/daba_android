@@ -36,7 +36,7 @@ public class HomeActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				getFragmentManager().beginTransaction().replace(R.id.container, new MyfeedFragment()).commit();
+				getFragmentManager().beginTransaction().replace(R.id.container, new MyfeedFragment()).addToBackStack(null).commit();
 				Toast.makeText(context, "Feed", Toast.LENGTH_SHORT).show();
 				
 			}
@@ -48,7 +48,7 @@ public class HomeActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				getFragmentManager().beginTransaction().replace(R.id.container, new PersonalFragment()).commit();
+				getFragmentManager().beginTransaction().replace(R.id.container, new PersonalFragment()).addToBackStack(null).commit();
 				Toast.makeText(context, "Profile", Toast.LENGTH_SHORT).show();
 				
 			}

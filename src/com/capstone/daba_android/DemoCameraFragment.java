@@ -32,6 +32,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView.FindListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
@@ -52,6 +53,8 @@ OnSeekBarChangeListener {
 	private SeekBar zoom=null;
 	private long lastFaceToast=0L;
 	String flashMode=null;
+	private String videoFileName = null;
+	Context context = null;
 
 	//Just creating a new instance of the current Fragment
 	static DemoCameraFragment newInstance(boolean useFFC) {
@@ -60,14 +63,14 @@ OnSeekBarChangeListener {
 
 		args.putBoolean(KEY_USE_FFC, useFFC);
 		f.setArguments(args);
-
+		Log.d("daba", "instance");
 		return(f);
 	}
 
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
-
+		
 		//Make sure menu option accessible
 		setHasOptionsMenu(true);
 		//new builder
@@ -75,8 +78,10 @@ OnSeekBarChangeListener {
 			new SimpleCameraHost.Builder(new DemoCameraHost(getActivity()));
 		//setting the host
 		setHost(builder.useFullBleedPreview(true).build());
+		Log.d("daba", "create");
 	}
 
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			ViewGroup container,
@@ -88,14 +93,18 @@ OnSeekBarChangeListener {
 		((ViewGroup)results.findViewById(R.id.camera)).addView(cameraView);
 		zoom=(SeekBar)results.findViewById(R.id.zoom);
 		zoom.setKeepScreenOn(true);
-
+		Log.d("daba", "createview");
+		videoFileName = this.getHost().getVideoFilename();
 		return(results);
 	}
 	public void onResume() {
-		super.onResume();
+		super.onResume();		
+		context = getActivity();
 		final Button startRecording = (Button) getActivity().findViewById(R.id.startRecording);
 		final Button stopRecording = (Button) getActivity().findViewById(R.id.stopRecording);
+		final ImageButton videosetdata = (ImageButton) getActivity().findViewById(R.id.next);
 		startRecording.setOnClickListener(new OnClickListener() {
+			
 
 			@Override
 			public void onClick(View v) {
@@ -138,6 +147,19 @@ OnSeekBarChangeListener {
 
 			}
 		});
+		
+		videosetdata.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(getActivity(), VideoSetData.class);
+				getActivity().startActivity(i);
+				
+				
+			}
+		});
+		Log.d("daba", "resume");
 	}
 
 	@Override
