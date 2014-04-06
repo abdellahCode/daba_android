@@ -18,5 +18,8 @@
     <string name="flash">Flash</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_video_set_data">VideoSetData</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="sharedPreferencesName">dabaPrefs</string>
+    <string name="title_activity_video">VideoActivity</string>
 
 </resources>

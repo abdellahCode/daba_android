@@ -7,24 +7,37 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.capstone.utils.utils;
+import com.capstone.utils.*;
 
 public class VideoSetData extends Activity {
 	LocationManager lm;
 	String provider;
 	TextView loc;
+	EditText videoTitle;
+	String lat;
+	String lng;
+	UploadPost t;
+	Context context;
+	String decision = "NOT OK";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,38 +45,75 @@ public class VideoSetData extends Activity {
 		final File currentVideo = utils.lastFileModified();
 		Toast.makeText(getApplicationContext(), "this is the file: " + currentVideo.getName(), Toast.LENGTH_SHORT).show();
 		Log.d("daba", "this is the file: " + currentVideo.getName());
-		TextView tv = (TextView)findViewById(R.id.fileName);
-		tv.setText("The video: " + currentVideo.getName());
-		loc = (TextView) findViewById(R.id.location);
-		Button b = (Button) findViewById(R.id.button1);
+		context = this;
+		ImageView iv = (ImageView) findViewById(R.id.thumbnail);
+		Bitmap thumb = null;
+		try {
+			thumb = ThumbnailUtils.createVideoThumbnail(currentVideo.getCanonicalPath(),
+					MediaStore.Images.Thumbnails.MINI_KIND);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		iv.setImageBitmap(thumb);
+		videoTitle = (EditText) findViewById(R.id.videoTitle);
+
+		Button b = (Button) findViewById(R.id.submit);
+
 		b.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				try {
-					new AsyncTask<String, String, String>(){
 
-						@Override
-						protected String doInBackground(String... params) {
-							// TODO Auto-generated method stub
-							int t;
-							try {
-								t = utils.upLoad2Server(currentVideo.getCanonicalPath());
-								Log.d("daba", "code: " + t);
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}							
-							return null;
-						}}.execute("");
+
+				new AsyncTask<Void, String, String>(){
+					String response;
 					
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					@Override
+					protected void onPreExecute() {
+						super.onPreExecute();
+						Toast.makeText(context, "starting..", Toast.LENGTH_SHORT).show();
+					}
+					@Override
+					protected String doInBackground(Void... params) {
+						// TODO Auto-generated method stub
+						try {
+							response = utils.myUpload(currentVideo.getCanonicalPath(), currentVideo.getName(), VideoSetData.this, videoTitle.getText().toString(), lat, lng);
+							
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return response;
+					}
+
+					@Override
+					protected void onPostExecute(String result) {
+						Log.d("daba", "status code: " + result);
+						if(result.equals("200")){
+							decision = "OK";
+							Toast.makeText(context, "done", Toast.LENGTH_LONG).show();
+							
+						}
+						else{
+							decision = "NOT OK";
+							Toast.makeText(context, "error uploading", Toast.LENGTH_LONG).show();
+						}
+					}
+				}.execute();
+				if(decision.equals("OK")){
+					Intent i = new Intent(context, HomeActivity.class);
+					context.startActivity(i);
+					finish();
 				}
-			}
-		});
+				else {
+					
+					
+				}
+				Log.d("daba", "uploading.. finish: " + decision);			
+			}});
 
 	}
 
@@ -79,8 +129,12 @@ public class VideoSetData extends Activity {
 				Criteria c = new Criteria();
 				//Location l = lm.getLastKnownLocation(lm.getBestProvider(c, false));
 				Location l = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-				if(l!=null)
+				if(l!=null){
 					Log.d("daba", "workig..: " + l.getLatitude() + " -- and: " + l.getLongitude());
+					lat = l.getLatitude() + "";
+					lng = l.getLongitude() + "";
+				}
+
 				else
 					Log.d("daba", "sorry..");
 				return null;

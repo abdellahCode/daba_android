@@ -2,25 +2,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VideoSetData"
-    android:orientation="vertical" >
+    android:padding="5dip"
+    android:orientation="vertical"
+    tools:context=".VideoSetData" >
 
     <TextView
-        android:id="@+id/fileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-    
-        <TextView
-        android:id="@+id/location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:text="Video Title: "
+        android:layout_marginTop="15dip"
+        android:layout_marginBottom="5dip" />
 
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button" />
+    <EditText
+        android:id="@+id/videoTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Add a title" />
+<ImageView
+        android:id="@+id/thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="100dip"
+        android:src="@drawable/ic_launcher" />
+    <Button
+        android:id="@+id/submit"
+        android:layout_height="40dip"
+        android:layout_width="match_parent"
+       	style="@style/btnStyleArsenic"
+        android:layout_marginTop="20dip"
+        android:text="Daba it!" />
+
+    
 
 </LinearLayout>
