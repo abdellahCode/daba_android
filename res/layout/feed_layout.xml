@@ -25,7 +25,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
                     
-                    <fragment class="com.capstone.daba_android.MyfeedFragment"
+                    <fragment android:id="@+id/feedfragment" 
+                        class="com.capstone.daba_android.MyfeedFragment"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"/>
 

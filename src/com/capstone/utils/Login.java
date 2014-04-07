@@ -155,7 +155,7 @@ public class Login extends AsyncTask<String, Integer, String>{
 	@Override
 	protected void onPostExecute(String result) {
 		JSONObject json = null;
-		String loginStatus = null, user_id = null, username = null;
+		String loginStatus = null, user_id = null, username = null, firstname = null, lastname = null;
 		try {
 				json = new JSONObject(result);
 			} catch (JSONException e) {
@@ -184,6 +184,8 @@ public class Login extends AsyncTask<String, Integer, String>{
 				try {
 					user_id = (String) json.get("user_id");
 					username = (String) json.get("username");
+					firstname = (String) json.get("firstname");
+					lastname = (String) json.get("lastname");
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -194,6 +196,8 @@ public class Login extends AsyncTask<String, Integer, String>{
 				//		Intent i = new Intent(this, Dashboard.class);
 				i.putExtra("username", username);
 				i.putExtra("user_id", user_id);
+				i.putExtra("firstname", firstname);
+				i.putExtra("lastname", lastname);
 				i.putExtra("sessionid", sessionid);
 				context.startActivity(i);
 

@@ -5,6 +5,9 @@ import java.io.InputStream;
 import com.capstone.utils.DefaultFeed;
 import com.capstone.utils.ImageLoader;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +18,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -31,12 +36,15 @@ import android.widget.VideoView;
 public class MyfeedFragment extends ListFragment {
 	Database db = null;
 	View showVideosView;
+	ListAdapter la;
 	public ImageLoader imageLoader; 
+	Context context;
+	public ListFragment fragment = this;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-
+		context = getActivity();
 		showVideosView = inflater.inflate(R.layout.myfeed_fragment, container, false);
-
+		Log.d("daba", "onCreateView of myfeed");
 		return (showVideosView);
 	}
 
@@ -52,23 +60,24 @@ public class MyfeedFragment extends ListFragment {
 		super.onResume();
 		db = new Database(getActivity());
 		Cursor c = db.getVideos();
-		ListAdapter la = new mycursoradapter(getActivity(), R.layout.feed_row, c, new String[] {"title", "url"},
+		la = new mycursoradapter(getActivity(), R.layout.feed_row, c, new String[] {"title", "url"},
 				new int[]{R.id.title, R.id.url});
 		setListAdapter(la);
 		
 		
-		Button b = (Button) getActivity().findViewById(R.id.bb);
-		b.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Log.d("daba", "starting...");
-				DefaultFeed df = new DefaultFeed(getActivity(), getActivity(), null);
-				df.execute("");
-
-			}
-		});
+//		Button b = (Button) getActivity().findViewById(R.id.bb);
+//		b.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				Log.d("daba", "starting...");
+//				DefaultFeed df = new DefaultFeed(fragment, getActivity(), null);
+//				df.execute("");
+//				
+//
+//			}
+//		});
 		ListView lv = getListView();
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
@@ -95,6 +104,8 @@ public class MyfeedFragment extends ListFragment {
 
 
 	}
+	
+
 	//	@Override
 	//	public void onListItemClick(ListView l, View v, int position, long id) {
 	//		// TODO Auto-generated method stub
@@ -105,13 +116,13 @@ public class MyfeedFragment extends ListFragment {
 	//		Log.d("daba", "starting..");	
 	//	}
 
-	class ViewHolder {
-		TextView title;
-		TextView url;
-		TextView city;
-		TextView country;
-		VideoView vv;
-		ImageView iv;
+	public class ViewHolder {
+		public TextView title;
+		public TextView url;
+		public TextView city;
+		public TextView country;
+		public VideoView vv;
+		public ImageView iv;
 
 	}
 	class mycursoradapter extends SimpleCursorAdapter{

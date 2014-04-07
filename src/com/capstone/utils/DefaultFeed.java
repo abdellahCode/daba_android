@@ -22,21 +22,25 @@ import com.capstone.daba_android.Database;
 import com.capstone.daba_android.HomeActivity;
 import com.capstone.daba_android.R;
 
+
 import android.app.Activity;
+import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
 import org.json.*;
 
+import android.widget.ListAdapter;
 import android.widget.Toast;
 
 /*This class sends the login request, and depending on the HTTP response,
  we decide to log the user in or keep them on the login activity*/
 public class DefaultFeed extends AsyncTask<String, Integer, String>{
-	public Activity loginActivity;
+	public ListFragment myfeedfragment;
 	String line = "";
 	String returned = "";
 	ProgressDialog pd = null;
@@ -44,8 +48,8 @@ public class DefaultFeed extends AsyncTask<String, Integer, String>{
 	//String[] creds = new String[2];
 
 
-	public DefaultFeed(Activity activity, Context c, ProgressDialog dialog){
-		this.loginActivity = activity;	
+	public DefaultFeed(ListFragment feedfragment, Context c, ProgressDialog dialog){
+		this.myfeedfragment = feedfragment;	
 		context = c;
 	}
 	/*Show the loading dialog*/
@@ -53,7 +57,7 @@ public class DefaultFeed extends AsyncTask<String, Integer, String>{
 	protected void onPreExecute() {
 		super.onPreExecute();
 		pd = new ProgressDialog(context);
-		pd.setMessage("Loading..");
+		pd.setMessage("refreshing..");
 		pd.setCancelable(false);
 		pd.setIndeterminate(true);
 		pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -161,10 +165,16 @@ public class DefaultFeed extends AsyncTask<String, Integer, String>{
 
 				// TODO Auto-generated catch block
 			Database db = new Database(context);
+			db.deleteVideos();
 			db.addVideos(json);
 			Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
 			if(pd != null)
 				pd.dismiss();
-		
+			Cursor c = db.getVideos();
+			ListAdapter la = new MyCursorLoader(context, R.layout.feed_row, c, new String[] {"title", "url"},
+					new int[]{R.id.title, R.id.url});
+			myfeedfragment.setListAdapter(la);
+			myfeedfragment.getListView().invalidateViews();
+			myfeedfragment.setListAdapter(la);
 	}
 }

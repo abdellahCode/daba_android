@@ -27,7 +27,7 @@ public class Database extends SQLiteOpenHelper {
 	private static final String VIDEOS_VIEWS = "views";
 	private static final String VIDEOS_THUMBNAIL = "thumbnail";
 	private static final String VIDEOS_DATETIME = "datetime";
-	
+
 	//the locations table
 	private static final String LOCATIONS_TABLE = "LOCATIONS";
 	private static final String L_ID = "_id";
@@ -37,14 +37,23 @@ public class Database extends SQLiteOpenHelper {
 	private static final String LOCATIONS_NAME = "name";
 	private static final String LOCATIONS_CITY = "city";
 	private static final String LOCATIONS_COUNTRY = "country";
-	
-	
+
+
 	//locationvideo table
 	private static final String LOCATIONVIDEO_TABLE = "LOCATIONVIDEO";
 	private static final String LV_ID = "_id";
 	private static final String LOCATION = "LOCATION";
 	private static final String VIDEO = "VIDEO";
-	
+
+
+	//profile table
+	private static final String PROFILE_TABLE = "PROFILES";
+	private static final String P_ID = "_id";
+	private static final String USERNAME = "username";
+	private static final String FIRSTNAME = "firstname";
+	private static final String LASTNAME = "lastname";
+	private static final String U_ID = "id";
+
 
 
 
@@ -55,9 +64,12 @@ public class Database extends SQLiteOpenHelper {
 	private static final String CREATE_LOCATIONS_TABLE = "create table " + LOCATIONS_TABLE + " ( " + L_ID + " integer primary key " +
 			"autoincrement, " + LOCATIONS_LONGITUDE + " REAL , " + LOCATIONS_LATITUDE + " REAL, " + LOCATIONS_NAME + " TEXT, " + LOCATIONS_ID + " TEXT, " + LOCATIONS_CITY + " TEXT , " +
 			LOCATIONS_COUNTRY + " TEXT ); ";
-	
+
 	private static final String CREATE_LOCATIONVIDEO_TABLE = "create table " + LOCATIONVIDEO_TABLE + " ( " + LV_ID + " integer primary key " +
 			"autoincrement, " + LOCATION + " INTEGER , " + VIDEO + " INTEGER ); ";
+	
+	private static final String CREATE_PROFILES_TABLE = "create table " + PROFILE_TABLE + " ( " + P_ID + " integer primary key " +
+			"autoincrement, " + USERNAME + " TEXT , " + FIRSTNAME + " TEXT, "+ LASTNAME + " TEXT, " + U_ID +" INTEGER ); ";
 
 
 	public Database(Context context) {
@@ -71,6 +83,7 @@ public class Database extends SQLiteOpenHelper {
 		db.execSQL(CREATE_VIDEOS_TABLE);
 		db.execSQL(CREATE_LOCATIONS_TABLE);
 		db.execSQL(CREATE_LOCATIONVIDEO_TABLE);
+		db.execSQL(CREATE_PROFILES_TABLE);
 	}
 
 	@Override
@@ -79,25 +92,26 @@ public class Database extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + VIDEOS_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + LOCATIONS_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + CREATE_LOCATIONVIDEO_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + CREATE_PROFILES_TABLE);
 		onCreate(db);
 	}
-	
+
 	public Cursor getVideos(){		
 		SQLiteDatabase db = this.getReadableDatabase();
 		String query = "select * from " + VIDEOS_TABLE;
 		Cursor videos = db.rawQuery(query, null);
-		
+
 		return videos;
 	}
-	
+
 	public int getVideosCount(){		
 		SQLiteDatabase db = this.getReadableDatabase();
 		String query = "select * from " + VIDEOS_TABLE;
 		Cursor videos = db.rawQuery(query, null);
-		
+
 		return videos.getCount();
 	}
-	
+
 	public String[] getCityCountryByVideo(String v_id){
 		SQLiteDatabase db = this.getReadableDatabase();
 		String query = "select city, country from " + LOCATIONS_TABLE + " where " + LOCATIONS_ID + " in (select " + LOCATION + " from " + LOCATIONVIDEO_TABLE + " where " + VIDEO + " = "+ v_id +")";
@@ -111,13 +125,25 @@ public class Database extends SQLiteOpenHelper {
 		}
 		return new String[]{location.getString(location.getColumnIndex("city")), location.getString(location.getColumnIndex("country"))};
 	}
-	
+
+	public void deleteVideos(){
+		SQLiteDatabase db = this.getWritableDatabase();
+		String query = "delete from " + VIDEOS_TABLE;
+		db.execSQL(query);
+		query = "delete from " + LOCATIONS_TABLE;
+		db.execSQL(query);
+		query = "delete from " + LOCATIONVIDEO_TABLE;
+		db.execSQL(query);
+
+	}
+
 	public void addVideos(JSONArray feed){
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues v_cv = new ContentValues();
 		ContentValues l_cv = new ContentValues();
 		ContentValues lv_cv = new ContentValues();
-		
+		ContentValues p_cv = new ContentValues();
+
 		try {
 			for(int i = 0; i < feed.length(); i++){
 				if(feed.getJSONObject(i).getString("model").equals("Daba.video")){
@@ -131,7 +157,7 @@ public class Database extends SQLiteOpenHelper {
 					v_cv.put("thumbnail", feed.getJSONObject(i).getJSONObject("fields").getString("thumbnail"));
 					v_cv.put("datetime", feed.getJSONObject(i).getJSONObject("fields").getString("timeOfUpload"));
 					v_cv.put("video_id", feed.getJSONObject(i).getString("pk"));
-					
+
 					db.insert(VIDEOS_TABLE, null, v_cv);
 					v_cv.clear();
 				}
@@ -154,6 +180,16 @@ public class Database extends SQLiteOpenHelper {
 					lv_cv.clear();
 				}
 				
+				else if(feed.getJSONObject(i).getString("model").equals("Daba.profile")){
+					Log.d("daba", "profile: " + feed.getJSONObject(i).getJSONObject("fields").getString("username"));
+					p_cv.put("location", feed.getJSONObject(i).getJSONObject("fields").getString("username"));
+					p_cv.put("location", feed.getJSONObject(i).getJSONObject("fields").getString("first_name"));
+					p_cv.put("location", feed.getJSONObject(i).getJSONObject("fields").getString("last_name"));
+					p_cv.put("video", feed.getJSONObject(i).getString("pk"));
+					db.insert(PROFILE_TABLE, null, p_cv);
+					p_cv.clear();
+				}
+
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

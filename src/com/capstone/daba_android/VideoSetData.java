@@ -95,24 +95,17 @@ public class VideoSetData extends Activity {
 						if(result.equals("200")){
 							decision = "OK";
 							Toast.makeText(context, "done", Toast.LENGTH_LONG).show();
-							
+							Intent i = new Intent(context, HomeActivity.class);
+							context.startActivity(i);
+							finish();
 						}
 						else{
 							decision = "NOT OK";
 							Toast.makeText(context, "error uploading", Toast.LENGTH_LONG).show();
+							
 						}
 					}
 				}.execute();
-				if(decision.equals("OK")){
-					Intent i = new Intent(context, HomeActivity.class);
-					context.startActivity(i);
-					finish();
-				}
-				else {
-					
-					
-				}
-				Log.d("daba", "uploading.. finish: " + decision);			
 			}});
 
 	}

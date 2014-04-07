@@ -1,30 +1,30 @@
 package com.capstone.daba_android;
 
+import com.capstone.utils.DefaultFeed;
 
 import android.os.Bundle;
 import android.content.SharedPreferences;
-import android.app.ActionBar.Tab;
+import android.app.ActionBar;
 import android.app.Activity;
-import android.app.LocalActivityManager;
+import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.graphics.Color;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabWidget;
-import android.widget.Toast;
 
 public class HomeActivity extends Activity implements OnTabChangeListener{
 	Context context;
+	TabHost tabhost;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class HomeActivity extends Activity implements OnTabChangeListener{
 		setContentView(R.layout.feed_layout);
 		context = this;
 
-		TabHost tabhost = (TabHost)findViewById(R.id.tabhost);
+		tabhost = (TabHost)findViewById(R.id.tabhost);
 		tabhost.setup();
 
 		//setting the feed tab.
@@ -54,8 +54,27 @@ public class HomeActivity extends Activity implements OnTabChangeListener{
 		Spec.setContent(R.id.tab3);
 		Spec.setIndicator("Profile");
 		tabhost.addTab(Spec);
-		
-		
+
+		tabhost.setOnTabChangedListener(new OnTabChangeListener() {
+
+			@Override
+			public void onTabChanged(String tabId) {
+				// TODO Auto-generated method stub
+				Log.d("daba", "tabId: " + tabId);
+				if(tabId.equals("feed")){
+					Log.d("daba", "in feed");
+					invalidateOptionsMenu();
+					//ab.set
+
+				}
+				else if(tabId.equals("profile")){
+					Log.d("daba", "in profile");
+					invalidateOptionsMenu();
+
+				}
+			}
+		});
+
 		tw.getChildAt(1).setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -65,24 +84,6 @@ public class HomeActivity extends Activity implements OnTabChangeListener{
 				HomeActivity.this.startActivity(new Intent(HomeActivity.this, MainActivity.class));
 			}
 		});
-		
-//		tw.getChildAt(0).setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Log.i("daba", "haaa");
-				
-//				Fragment f = new MyfeedFragment();
-//				FragmentTransaction ft = getFragmentManager().beginTransaction();
-//				ft.replace(android.R.id.tabcontent, f);
-//				ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//				ft.commit();
-
-//			}
-//		});
-
-
 	}
 
 	@Override
@@ -93,6 +94,8 @@ public class HomeActivity extends Activity implements OnTabChangeListener{
 		try{
 			editor.putString("username", getIntent().getExtras().getString("username"));
 			editor.putString("user_id", getIntent().getExtras().getString("user_id"));
+			editor.putString("firstname", getIntent().getExtras().getString("firstname"));
+			editor.putString("lastname", getIntent().getExtras().getString("lastname"));
 			editor.putString("loginStatus", "AUTHENTICATED");
 			editor.putString("sessionid", getIntent().getExtras().getString("sessionid"));
 			editor.commit();
@@ -104,17 +107,55 @@ public class HomeActivity extends Activity implements OnTabChangeListener{
 
 	}
 
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home, menu);
+		MenuInflater mi = getMenuInflater();
+		Log.i("daba", "create");
+		menu.clear();
+		if(tabhost.getCurrentTab() == 0){
+			Log.i("daba", "tab id: " + tabhost.getCurrentTab());
+			mi.inflate(R.menu.feed, menu);
+			menu.findItem(R.id.action_refresh).setOnMenuItemClickListener(new OnMenuItemClickListener() {
+				@Override
+				public boolean onMenuItemClick(MenuItem item) {
+					//refresh code...
+					DefaultFeed df = new DefaultFeed((ListFragment) getFragmentManager().findFragmentById(R.id.feedfragment), context, null);
+					df.execute("");
+					
+					
+					return true;
+				}
+			});
+			
+		}
+		else if(tabhost.getCurrentTab() == 2){
+			Log.i("daba", "tab id: " + tabhost.getCurrentTab());
+			mi.inflate(R.menu.profile, menu);
+		}
 		return true;
 	}
 
 	@Override
 	public void onTabChanged(String tabId) {
 		// TODO Auto-generated method stub
-		
+		Log.d("daba", "tabId: " + tabId);
+		if(tabId.equals("0")){
+			ActionBar ab = getActionBar();
+			Button b = new Button(context);
+			b.setBackgroundColor(Color.WHITE);
+			b.setText("TEST");
+			ab.setCustomView(b);
+
+		}
+		else{
+			ActionBar ab = getActionBar();
+			Button b = new Button(context);
+			b.setBackgroundColor(Color.GREEN);
+			b.setText("OKAY");
+			ab.setCustomView(b);
+		}
 	}
 
 }
