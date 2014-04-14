@@ -4,73 +4,76 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#ECF0F1"
-        android:orientation="horizontal" 
-        android:gravity="right" >
-	<ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:src="@drawable/cancel"
-            
-            />
-        <Space
-            android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1.2"
+        android:id="@+id/frame" >
+
+<!--         <LinearLayout -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="40dp" -->
+<!--             android:background="#ECF0F1" -->
+<!--             android:gravity="right" -->
+<!--             android:orientation="horizontal" > -->
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/cancel" />
+
+<!--             <Space -->
+<!--                 android:layout_width="fill_parent" -->
+<!--                 android:layout_height="match_parent" -->
+<!--                 android:layout_weight="1" -->
+<!--                 android:background="#CCCCCC" /> -->
+
+            <ImageButton
+                android:id="@+id/next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/right" />
+<!--         </LinearLayout> -->
+
+        <FrameLayout
+            android:id="@+id/camera"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#CCCCCC"
-            android:layout_weight="1"
-            />
+            android:layout_weight="1" />
 
-        <ImageButton
-            android:id="@+id/next"
+        <!-- <RelativeLayout -->
+        <!-- android:layout_width="match_parent" -->
+        <!-- android:layout_height="wrap_content" -->
+        <!-- > -->
+
+
+        <!-- </RelativeLayout> -->
+
+        <Button
+            android:id="@+id/startRecording"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:src="@drawable/right"
-            
-            />
-    </LinearLayout>
-<RelativeLayout 
-    android:layout_width="match_parent"
-    android:layout_height="0dip"
-    android:layout_weight="1.2">
-    <FrameLayout
-        android:id="@+id/camera"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@android:drawable/ic_media_play" />
 
-    <!-- <RelativeLayout -->
-    <!-- android:layout_width="match_parent" -->
-    <!-- android:layout_height="wrap_content" -->
-    <!-- > -->
+        <Button
+            android:id="@+id/stopRecording"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@android:drawable/ic_media_pause"
+            android:visibility="gone" />
+    </RelativeLayout>
 
-
-    <!-- </RelativeLayout> -->
-
-
-
-    <Button
-        android:id="@+id/startRecording"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@android:drawable/ic_media_play" />
-
-    <Button
-        android:id="@+id/stopRecording"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@android:drawable/ic_media_pause"
-        android:visibility="gone" />
-</RelativeLayout>
     <SeekBar
         android:id="@+id/zoom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

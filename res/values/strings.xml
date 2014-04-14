@@ -21,5 +21,7 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="sharedPreferencesName">dabaPrefs</string>
     <string name="title_activity_video">VideoActivity</string>
+    <string name="title_activity_recording">RecordingActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
 
 </resources>

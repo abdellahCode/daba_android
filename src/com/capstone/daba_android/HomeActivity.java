@@ -31,6 +31,7 @@ public class HomeActivity extends Activity implements OnTabChangeListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.feed_layout);
 		context = this;
+		
 
 		tabhost = (TabHost)findViewById(R.id.tabhost);
 		tabhost.setup();
@@ -55,6 +56,12 @@ public class HomeActivity extends Activity implements OnTabChangeListener{
 		Spec.setIndicator("Profile");
 		tabhost.addTab(Spec);
 
+		//setting the profile tab.
+		Spec = tabhost.newTabSpec("locations");
+		Spec.setContent(R.id.tab4);
+		Spec.setIndicator("Locations");
+		tabhost.addTab(Spec);
+		
 		tabhost.setOnTabChangedListener(new OnTabChangeListener() {
 
 			@Override
@@ -81,7 +88,7 @@ public class HomeActivity extends Activity implements OnTabChangeListener{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Log.i("daba", "haaa");
-				HomeActivity.this.startActivity(new Intent(HomeActivity.this, MainActivity.class));
+				HomeActivity.this.startActivity(new Intent(HomeActivity.this, RecordingActivity.class));
 			}
 		});
 	}
@@ -122,13 +129,11 @@ public class HomeActivity extends Activity implements OnTabChangeListener{
 				public boolean onMenuItemClick(MenuItem item) {
 					//refresh code...
 					DefaultFeed df = new DefaultFeed((ListFragment) getFragmentManager().findFragmentById(R.id.feedfragment), context, null);
-					df.execute("");
-					
-					
+					df.execute("");					
 					return true;
 				}
 			});
-			
+
 		}
 		else if(tabhost.getCurrentTab() == 2){
 			Log.i("daba", "tab id: " + tabhost.getCurrentTab());

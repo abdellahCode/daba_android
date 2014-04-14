@@ -24,13 +24,12 @@
                     android:id="@+id/tab1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
-                    
-                    <fragment android:id="@+id/feedfragment" 
-                        class="com.capstone.daba_android.MyfeedFragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
 
-                   
+                    <fragment
+                        android:id="@+id/feedfragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        class="com.capstone.daba_android.MyfeedFragment" />
                 </FrameLayout>
 
                 <FrameLayout
@@ -38,9 +37,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
 
-                    <fragment class="com.capstone.daba_android.PersonalFragment"
+                    <fragment
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent"
+                        class="com.capstone.daba_android.PersonalFragment" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/tab4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <fragment
+                        android:id="@+id/map_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        class="com.capstone.daba_android.MapFragment" />
                 </FrameLayout>
             </FrameLayout>
 

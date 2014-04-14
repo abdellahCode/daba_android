@@ -176,7 +176,7 @@ public class utils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		bmp = Bitmap.createScaledBitmap(bmp, 320, 320, false);
 		bmp.compress(Bitmap.CompressFormat.PNG, 0, fOut);
 		try {
 			fOut.flush();
@@ -207,7 +207,7 @@ public class utils {
 
 		HttpParams httparams = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(httparams, 5000);
-		HttpConnectionParams.setSoTimeout(httparams, 5000);
+		HttpConnectionParams.setSoTimeout(httparams, 15000);
 		httparams.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 		Log.i("dabaupload", "Ready to upload file...");
 		HttpClient client = new DefaultHttpClient(httparams);
@@ -219,7 +219,8 @@ public class utils {
 		Log.i("dabaupload", "Adding file(s)...");
 		FileBody video = new FileBody(new File(videoPath));
 		Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoPath,
-				MediaStore.Images.Thumbnails.MINI_KIND);
+				MediaStore.Video.Thumbnails.MINI_KIND);
+		
 		String thumbnailPath = getThumbnail(thumb, videoName);
 		FileBody thumbnail = new FileBody(new File(thumbnailPath));
 		SharedPreferences sp = c.getSharedPreferences(c.getString(R.string.sharedPreferencesName), Context.MODE_PRIVATE);

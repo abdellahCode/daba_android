@@ -91,8 +91,8 @@ public class Database extends SQLiteOpenHelper {
 		// TODO Auto-generated method stub
 		db.execSQL("DROP TABLE IF EXISTS " + VIDEOS_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + LOCATIONS_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + CREATE_LOCATIONVIDEO_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + CREATE_PROFILES_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + LOCATIONVIDEO_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + PROFILE_TABLE);
 		onCreate(db);
 	}
 
@@ -135,6 +135,19 @@ public class Database extends SQLiteOpenHelper {
 		query = "delete from " + LOCATIONVIDEO_TABLE;
 		db.execSQL(query);
 
+	}
+	
+	public Cursor getUser(String user){
+		SQLiteDatabase db = this.getReadableDatabase();
+		Log.d("db", "database: " + user);
+		String query = "select * from " + PROFILE_TABLE + " where " + U_ID + " = " + user;
+		Log.d("db", "query: " + query);
+		Cursor c = db.rawQuery(query, null);
+		Log.d("db", "the count: " + c.getCount());
+		c.moveToFirst();
+		Log.d("db", "the user: " + c.getString(c.getColumnIndex("username")));
+		
+		return c;
 	}
 
 	public void addVideos(JSONArray feed){
@@ -182,10 +195,10 @@ public class Database extends SQLiteOpenHelper {
 				
 				else if(feed.getJSONObject(i).getString("model").equals("Daba.profile")){
 					Log.d("daba", "profile: " + feed.getJSONObject(i).getJSONObject("fields").getString("username"));
-					p_cv.put("location", feed.getJSONObject(i).getJSONObject("fields").getString("username"));
-					p_cv.put("location", feed.getJSONObject(i).getJSONObject("fields").getString("first_name"));
-					p_cv.put("location", feed.getJSONObject(i).getJSONObject("fields").getString("last_name"));
-					p_cv.put("video", feed.getJSONObject(i).getString("pk"));
+					p_cv.put("username", feed.getJSONObject(i).getJSONObject("fields").getString("username"));
+					p_cv.put("firstname", feed.getJSONObject(i).getJSONObject("fields").getString("first_name"));
+					p_cv.put("lastname", feed.getJSONObject(i).getJSONObject("fields").getString("last_name"));
+					p_cv.put("id", feed.getJSONObject(i).getString("pk"));
 					db.insert(PROFILE_TABLE, null, p_cv);
 					p_cv.clear();
 				}

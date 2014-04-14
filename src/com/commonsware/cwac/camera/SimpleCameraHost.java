@@ -86,8 +86,11 @@ public class SimpleCameraHost implements CameraHost {
     else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
         && CamcorderProfile.hasProfile(cameraId,
                                        CamcorderProfile.QUALITY_LOW)) {
-      recorder.setProfile(CamcorderProfile.get(cameraId,
+      
+    	recorder.setProfile(CamcorderProfile.get(cameraId,
                                                CamcorderProfile.QUALITY_LOW));
+      
+      
     }
     else {
       throw new IllegalStateException(

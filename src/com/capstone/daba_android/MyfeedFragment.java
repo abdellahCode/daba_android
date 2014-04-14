@@ -2,12 +2,7 @@ package com.capstone.daba_android;
 
 import java.io.InputStream;
 
-import com.capstone.utils.DefaultFeed;
 import com.capstone.utils.ImageLoader;
-
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -18,14 +13,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -121,6 +112,7 @@ public class MyfeedFragment extends ListFragment {
 		public TextView url;
 		public TextView city;
 		public TextView country;
+		public TextView username;
 		public VideoView vv;
 		public ImageView iv;
 
@@ -150,6 +142,7 @@ public class MyfeedFragment extends ListFragment {
 					holder.country = (TextView) view.findViewById(R.id.country);
 					holder.url = (TextView) view.findViewById(R.id.url);
 					holder.iv = (ImageView) view.findViewById(R.id.thumb);
+					holder.username = (TextView) view.findViewById(R.id.username);
 					//holder.vv = (VideoView) view.findViewById(R.id.video);
 					view.setTag(holder);
 				} else {
@@ -163,6 +156,11 @@ public class MyfeedFragment extends ListFragment {
 				String[] location = db.getCityCountryByVideo(cursor.getString(cursor.getColumnIndex("video_id")));
 				holder.city.setText(location[0]);
 				holder.country.setText(location[1]);
+				Log.d("db", "the user ID: " + cursor.getString(cursor.getColumnIndex("user_id")));
+				Cursor user = db.getUser(cursor.getString(cursor.getColumnIndex("user_id")));
+				user.moveToFirst();
+				holder.username.setText("By: " + user.getString(user.getColumnIndex("username")));
+				Log.d("db", "after sttext");
 				//Uri uri = Uri.parse("http://192.168.154.1:8000/media/" + cursor.getString(cursor.getColumnIndex("url")));
 				//Uri uri = Uri.parse("http://www.dabanit.com/media/documents/2014/03/05/Video_20140302_035701.mp4");
 				//holder.vv.setVideoURI(uri);
