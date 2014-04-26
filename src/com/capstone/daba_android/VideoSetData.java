@@ -24,6 +24,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.capstone.utils.*;
@@ -38,6 +39,7 @@ public class VideoSetData extends Activity {
 	UploadPost t;
 	Context context;
 	String decision = "NOT OK";
+	ProgressBar loading;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,7 +60,8 @@ public class VideoSetData extends Activity {
 
 		iv.setImageBitmap(thumb);
 		videoTitle = (EditText) findViewById(R.id.videoTitle);
-
+		loading = (ProgressBar) findViewById(R.id.loading);
+		
 		Button b = (Button) findViewById(R.id.submit);
 
 		b.setOnClickListener(new OnClickListener() {
@@ -75,6 +78,7 @@ public class VideoSetData extends Activity {
 					protected void onPreExecute() {
 						super.onPreExecute();
 						Toast.makeText(context, "starting..", Toast.LENGTH_SHORT).show();
+						loading.setVisibility(View.VISIBLE);
 					}
 					@Override
 					protected String doInBackground(Void... params) {
@@ -96,12 +100,15 @@ public class VideoSetData extends Activity {
 							decision = "OK";
 							Toast.makeText(context, "done", Toast.LENGTH_LONG).show();
 							Intent i = new Intent(context, HomeActivity.class);
+							i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							context.startActivity(i);
 							finish();
+							loading.setVisibility(View.INVISIBLE);
 						}
 						else{
 							decision = "NOT OK";
 							Toast.makeText(context, "error uploading", Toast.LENGTH_LONG).show();
+							loading.setVisibility(View.INVISIBLE);
 							
 						}
 					}

@@ -2,35 +2,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dip"
     android:orientation="vertical"
+    android:padding="5dip"
     tools:context=".VideoSetData" >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Video Title: "
+        android:layout_marginBottom="5dip"
         android:layout_marginTop="15dip"
-        android:layout_marginBottom="5dip" />
+        android:text="Video Title: " />
 
     <EditText
         android:id="@+id/videoTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Add a title" />
-<ImageView
+
+    <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="match_parent"
         android:layout_height="100dip"
         android:src="@drawable/ic_launcher" />
+
     <Button
         android:id="@+id/submit"
-        android:layout_height="40dip"
+        style="@style/btnStyleArsenic"
         android:layout_width="match_parent"
-       	style="@style/btnStyleArsenic"
+        android:layout_height="40dip"
         android:layout_marginTop="20dip"
         android:text="Daba it!" />
 
-    
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="invisible"
+        android:layout_marginTop="20dip" />
 
 </LinearLayout>

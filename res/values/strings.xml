@@ -1,27 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources  xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 
-    <string name="app_name">DABA</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="standard">Standard</string>
-    <string name="ffc">Front-Facing</string>
-    <string name="record">Record Video</string>
-    <string name="stop">Stop</string>
-    <string name="lock_to_landscape">Lock to Landscape</string>
-    <string name="launch_camera_app">Launch Camera App</string>
-    <string name="take_picture">Take Picture</string>
-    <string name="auto_focus">Auto-focus</string>
-    <string name="single_shot_mode">Single-Shot Mode</string>
-    <string name="no_image">There was no image to show!</string>
-    <string name="show_zoom">Show Zoom</string>
-    <string name="flash">Flash</string>
-    <string name="title_activity_home">HomeActivity</string>
-    <string name="title_activity_video_set_data">VideoSetData</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="sharedPreferencesName">dabaPrefs</string>
-    <string name="title_activity_video">VideoActivity</string>
-    <string name="title_activity_recording">RecordingActivity</string>
-    <string name="title_activity_register">RegisterActivity</string>
+
+    <string name="app_name" translatable="false">DABA</string>
+    <string name="action_settings" translatable="false">Settings</string>
+    <string name="hello_world" translatable="false">Hello world!</string>
+    <string name="standard" translatable="false">Standard</string>
+    <string name="ffc" translatable="false">Front-Facing</string>
+    <string name="record" translatable="false">Record Video</string>
+    <string name="stop" translatable="false">Stop</string>
+    <string name="lock_to_landscape" translatable="false">Lock to Landscape</string>
+    <string name="launch_camera_app" translatable="false">Launch Camera App</string>
+    <string name="take_picture" translatable="false">Take Picture</string>
+    <string name="auto_focus" translatable="false">Auto-focus</string>
+    <string name="single_shot_mode" translatable="false">Single-Shot Mode</string>
+    <string name="no_image" translatable="false">There was no image to show!</string>
+    <string name="show_zoom" translatable="false">Show Zoom</string>
+    <string name="flash" translatable="false">Flash</string>
+    <string name="title_activity_home" translatable="false">HomeActivity</string>
+    <string name="title_activity_video_set_data" translatable="false">VideoSetData</string>
+    <string name="title_activity_login" translatable="false">LoginActivity</string>
+    <string name="sharedPreferencesName" translatable="false">dabaPrefs</string>
+    <string name="title_activity_video" translatable="false">VideoActivity</string>
+    <string name="title_activity_recording" translatable="false">RecordingActivity</string>
+    <string name="title_activity_register" translatable="false">RegisterActivity</string>
 
 </resources>

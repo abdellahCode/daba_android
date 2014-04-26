@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
-    android:padding="2dip" 
-    android:background="#F5F5F5">
+    android:padding="2dip" >
 
     <TextView
         android:id="@+id/title"
@@ -29,6 +29,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip"
             android:layout_weight="1" >
 
             <TextView
@@ -48,13 +49,27 @@
                 android:textSize="18dp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/datetime"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="April 11 - 10:23 AM"
-            android:textSize="18dp" />
+            android:layout_height="wrap_content"
+            android:gravity="right|center_vertical"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/clock" />
+
+            <TextView
+                android:id="@+id/datetime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right|center_vertical"
+                android:text="3 hours ago"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="14dp"
+                android:layout_marginLeft="3dp" />
+        </LinearLayout>
     </LinearLayout>
 
     <!-- <VideoView -->
@@ -69,44 +84,38 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="214dp"
-        android:gravity="center_horizontal" >
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
 
         <ImageView
             android:id="@+id/thumb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="video thumbnail"
+            android:scaleType="fitCenter"
+            android:layout_centerHorizontal="true"
             android:src="@drawable/videoplay" />
 
-          <ImageView
-              android:id="@+id/play"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_centerHorizontal="true"
-              android:layout_centerVertical="true"
-              android:contentDescription="play video"
-              android:src="@drawable/playw" />
-
-          <ImageView
-              android:id="@+id/info"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentBottom="true"
-              android:layout_alignParentRight="true"
-              android:layout_alignParentTop="true"
-              android:background="#2565C7"
-              android:contentDescription="video info"
-              android:src="@drawable/info" />
+        <ImageView
+            android:id="@+id/info"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="#F5F5F5"
+            android:contentDescription="video info"
+            android:src="@drawable/ic_launcher_white" />
 
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="7dip"
         android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/username"
+            android:id="@+id/userDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -116,8 +125,8 @@
             android:id="@+id/report"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
             android:layout_weight="1"
+            android:gravity="right"
             android:text="report" />
     </LinearLayout>
 

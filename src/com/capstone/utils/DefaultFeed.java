@@ -58,10 +58,10 @@ public class DefaultFeed extends AsyncTask<String, Integer, String>{
 		super.onPreExecute();
 		pd = new ProgressDialog(context);
 		pd.setMessage("refreshing..");
-		pd.setCancelable(false);
+		pd.setCancelable(true);
 		pd.setIndeterminate(true);
 		pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		pd.show();
+		//pd.show();
 	}
 	/*Construct the HTTP request, load parameters and execute it, read HTTP response, and decicde on the next action*/
 	@Override
@@ -70,8 +70,8 @@ public class DefaultFeed extends AsyncTask<String, Integer, String>{
 		HttpConnectionParams.setConnectionTimeout(httparams, 5000);
 		HttpConnectionParams.setSoTimeout(httparams, 15000);
 		HttpClient httpclient = new DefaultHttpClient(httparams);
-		HttpPost httppost = new HttpPost("http://192.168.154.1:8000/lfeed/");
-		//HttpPost httppost = new HttpPost("http://127.0.0.1:8000/lfeed/");
+		//HttpPost httppost = new HttpPost("http://192.168.154.1:8000/lfeed/");
+		HttpPost httppost = new HttpPost("http://www.dabanit.com/daba_server/lfeed/");
 		SharedPreferences sp = context.getSharedPreferences(context.getString(R.string.sharedPreferencesName), Context.MODE_PRIVATE);
 		Log.d("daba", "the session id feed: " + sp.getString("sessionid", "None"));
 		//httppost.addHeader("sessionid", sp.getString("sessionid", "None"));
@@ -163,15 +163,16 @@ public class DefaultFeed extends AsyncTask<String, Integer, String>{
 				if(pd != null)
 					pd.dismiss();
 				Cursor c = db.getVideos();
-				ListAdapter la = new MyCursorLoader(context, R.layout.feed_row, c, new String[] {"title", "url"},
+				ListAdapter la = new MyCursorLoader(myfeedfragment.getActivity(), R.layout.feed_row, c, new String[] {"title", "url"},
 						new int[]{R.id.title, R.id.url});
 				myfeedfragment.setListAdapter(la);
 				myfeedfragment.getListView().invalidateViews();
 				myfeedfragment.setListAdapter(la);
+				myfeedfragment.getListView().setFocusable(false);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				if(pd != null)
-					pd.dismiss();
+					//pd.dismiss();
 				e.printStackTrace();
 				Toast.makeText(context, "Network problem..", Toast.LENGTH_LONG).show();
 			}

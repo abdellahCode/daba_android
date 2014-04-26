@@ -20,6 +20,8 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import com.capstone.daba_android.HomeActivity;
+import com.capstone.daba_android.LoginActivity;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -32,27 +34,26 @@ import android.widget.Toast;
 
 /*This class sends the login request, and depending on the HTTP response,
  we decide to log the user in or keep them on the login activity*/
-public class Login extends AsyncTask<String, Integer, String>{
-	public Activity loginActivity;
+public class register extends AsyncTask<String, Integer, String>{
+	public Activity registerActivity;
 	String line = "";
 	String returned = "";
+	Context context = null;
 	ProgressDialog pd = null;
-	Context context;
-	String[] creds = new String[2];
-	String sessionid = null;
 
 
-	public Login(Activity activity, Context c, ProgressDialog dialog){
-		this.loginActivity = activity;	
-		context = c;
+
+	public register(Activity activity, Context c, ProgressDialog dialog){
+		this.registerActivity = activity;	
+		this.context = c;
 	}
 	/*Show the loading dialog*/
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		pd = new ProgressDialog(context);
-		pd.setMessage("Authenticating..");
-		pd.setCancelable(false);
+		pd = new ProgressDialog(registerActivity);
+		pd.setMessage("Registering..");
+		pd.setCancelable(true);
 		pd.setIndeterminate(true);
 		pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		pd.show();
@@ -61,17 +62,23 @@ public class Login extends AsyncTask<String, Integer, String>{
 	@Override
 	protected String doInBackground(String... params) {
 		HttpParams httparams = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(httparams, 20000);
-		HttpConnectionParams.setSoTimeout(httparams, 25000);
+		HttpConnectionParams.setConnectionTimeout(httparams, 5000);
+		HttpConnectionParams.setSoTimeout(httparams, 15000);
 		HttpClient httpclient = new DefaultHttpClient(httparams);
 		//HttpPost httppost = new HttpPost("http://192.168.154.1:8000/login/");
-		HttpPost httppost=new HttpPost("http://www.dabanit.com/daba_server/login/");
+		HttpPost httppost=new HttpPost("http://www.dabanit.com/daba_server/register/");
 		//HttpPost httppost = new HttpPost("http://127.0.0.1:8000/login/");
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);  
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);  
 		nameValuePairs.add(new BasicNameValuePair("username", params[0]));  
-		nameValuePairs.add(new BasicNameValuePair("password", params[1])); 
+		nameValuePairs.add(new BasicNameValuePair("firstName", params[1])); 
+		nameValuePairs.add(new BasicNameValuePair("lastName", params[2]));
+		nameValuePairs.add(new BasicNameValuePair("email", params[3]));
+		nameValuePairs.add(new BasicNameValuePair("password", params[4]));
+		nameValuePairs.add(new BasicNameValuePair("city", params[5]));
+		nameValuePairs.add(new BasicNameValuePair("country", params[6]));
+		nameValuePairs.add(new BasicNameValuePair("birthdate", "1991-1-1"));
 
-		creds = params;
+
 		try {
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		} catch (UnsupportedEncodingException e2) {
@@ -133,13 +140,7 @@ public class Login extends AsyncTask<String, Integer, String>{
 					Log.i("Login", "this is it again"+line);
 				}
 				Log.d("daba", "heeeeeeeeeeere...");
-				//for(int j = 0; j < response.getAllHeaders().length; j++)
-				Log.d("daba", response.getAllHeaders()[4].getValue());
-				
-				StringTokenizer st = new StringTokenizer(response.getAllHeaders()[4].getValue(), ";");
-				sessionid = st.nextToken().substring(10);
-				Log.d("daba", "the sessionid: " + sessionid);
-				
+
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -156,60 +157,28 @@ public class Login extends AsyncTask<String, Integer, String>{
 	@Override
 	protected void onPostExecute(String result) {
 		JSONObject json = null;
-		String loginStatus = null, user_id = null, username = null, firstname = null, lastname = null;
+		String registerStatus;
 		try {
-				json = new JSONObject(result);
-				try {
-					loginStatus = (String) json.get("loginStatus");
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				Log.i("Login","this is the loginStatus: "+result);
-				if(loginStatus.equalsIgnoreCase("INCORRECT CREDS")){
-					Toast.makeText(context, "Bad email or password", Toast.LENGTH_LONG).show();
-				}
-				else if(loginStatus.equalsIgnoreCase("TIMEOUT")){
-					//setContentView(R.layout.activity_login);
-					Toast.makeText(context.getApplicationContext(), "Network Problem", Toast.LENGTH_LONG).show();
-				}
-
-				else if(result.length() == 0){
-					Toast.makeText(context.getApplicationContext(), "Network Problem", Toast.LENGTH_LONG).show();			
-				}
-				else if(loginStatus.equalsIgnoreCase("AUTHENTICATED")){
-					try {
-						user_id = (String) json.get("user_id");
-						username = (String) json.get("username");
-						firstname = (String) json.get("firstname");
-						lastname = (String) json.get("lastname");
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					Toast.makeText(context, "You are in", Toast.LENGTH_SHORT).show();
-					this.loginActivity.finish();
-					Intent i = new Intent(context, HomeActivity.class);
-					//		Intent i = new Intent(this, Dashboard.class);
-					i.putExtra("username", username);
-					i.putExtra("user_id", user_id);
-					i.putExtra("firstname", firstname);
-					i.putExtra("lastname", lastname);
-					i.putExtra("sessionid", sessionid);
-					context.startActivity(i);
-
-					// TODO Auto-generated catch block
-				}
-				else{
-					Toast.makeText(context, "WRONG: " + result, Toast.LENGTH_SHORT).show();
-				}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			json = new JSONObject(result);
+			registerStatus = (String) json.get("registerStatus");
+			Log.i("register","this is the registerStatus: "+result);
+			if(registerStatus.equalsIgnoreCase("success")){
+				Toast.makeText(context, "registered", Toast.LENGTH_LONG).show();
+				this.registerActivity.finish();
+				Intent i = new Intent(context, LoginActivity.class);				
+				context.startActivity(i);
 			}
-			
-			if(pd != null)
-				pd.dismiss();
-		
+			else
+				Toast.makeText(context, "registration error", Toast.LENGTH_LONG).show();
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Toast.makeText(context, "registeration error", Toast.LENGTH_LONG).show();
+		}
+
+		if(pd != null)
+			pd.dismiss();
+
 	}
 }

@@ -68,7 +68,8 @@ public class Follow_Location extends AsyncTask<String, String, String> {
 		HttpConnectionParams.setConnectionTimeout(httparams, 5000);
 		HttpConnectionParams.setSoTimeout(httparams, 15000);
 		HttpClient httpclient = new DefaultHttpClient(httparams);
-		HttpPost httppost = new HttpPost("http://192.168.154.1:8000/lfollow/");
+		//HttpPost httppost = new HttpPost("http://192.168.154.1:8000/lfollow/");
+		HttpPost httppost = new HttpPost("http://www.dabanit.com/daba_server/lfollow/");
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);  
 		nameValuePairs.add(new BasicNameValuePair("lat", point.latitude + ""));  
 		nameValuePairs.add(new BasicNameValuePair("lng", point.longitude + ""));

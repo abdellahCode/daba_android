@@ -1,18 +1,14 @@
 package com.capstone.daba_android;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -25,27 +21,29 @@ public class VideoActivity extends Activity {
 		
 		String url = getIntent().getExtras().getString("url");
 		Log.d("daba", "the video url: " + url);
-		VideoView vv = (VideoView) findViewById(R.id.video);
-		Uri uri = Uri.parse("http://www.dabanit.com/media/documents/2014/03/05/Video_20140302_035701.mp4");
+		final VideoView vv = (VideoView) findViewById(R.id.video);
+		Uri uri = Uri.parse("http://www.dabanit.com/media/" + url);
 		vv.setVideoURI(uri);
 		MediaController mc = new MediaController(this);
 		mc.setAnchorView(vv);
+		
 		vv.setMediaController(mc);
 		vv.requestFocus();
 		
 		pd = new ProgressDialog(this);
 		pd.setMessage("Loading..");
-		pd.setCancelable(false);
+		pd.setCancelable(true);
 		pd.setIndeterminate(true);
 		pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		pd.show();
-		
+		//vv.set
 		vv.setOnPreparedListener(new OnPreparedListener() {
 			
 			@Override
 			public void onPrepared(MediaPlayer mp) {
 				// TODO Auto-generated method stub
 				pd.dismiss();
+				vv.start();
 			}
 		});
 		

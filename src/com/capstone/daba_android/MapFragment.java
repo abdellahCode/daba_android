@@ -1,15 +1,21 @@
 package com.capstone.daba_android;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.database.Cursor;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +37,7 @@ public class MapFragment extends Fragment {
 		 mapview = (MapView) v.findViewById(R.id.mapView);
 		 mapview.onCreate(savedInstanceState);
 		 map = mapview.getMap();
-
+		 MapsInitializer.initialize(getActivity());
 		return v;
 	}
 	@Override
@@ -42,6 +48,20 @@ public class MapFragment extends Fragment {
 	public void onResume(){
 		super.onResume();
 		mapview.onResume();
+		//centerMapOnMyLocation();
+		map.setMyLocationEnabled(true);
+		
+		Database db = new Database(getActivity());
+		LatLng location = null;
+		Cursor c = db.getLatLng();
+		//c.moveToFirst();
+		while(c.moveToNext()){
+			Log.d("map", "latlng: " + c.getDouble(c.getColumnIndex("lat")) + " -- " + c.getDouble(c.getColumnIndex("lng")));
+			location = new LatLng(c.getDouble(c.getColumnIndex("lat")), c.getDouble(c.getColumnIndex("lng")));			
+			if(location == null)
+				Log.d("map", "it is null");
+			map.addMarker(new MarkerOptions().position(location).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
+		}
 		
 		builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle("Follow Location:");
@@ -88,6 +108,21 @@ public class MapFragment extends Fragment {
 				Toast.makeText(getActivity(), "That's a click XD", Toast.LENGTH_SHORT).show();					
 			}
 		});
+		
+		
+	}
+	private void centerMapOnMyLocation() {
+		LatLng myLocation = null;
+	    map.setMyLocationEnabled(true);
+
+	    Location location = map.getMyLocation();
+
+	    if (location != null) {
+	        myLocation = new LatLng(location.getLatitude(),
+	                location.getLongitude());
+	    }
+	    map.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation,
+	            10));
 	}
 
 	//	@Override

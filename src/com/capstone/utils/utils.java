@@ -24,6 +24,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -176,7 +177,7 @@ public class utils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		bmp = Bitmap.createScaledBitmap(bmp, 320, 320, false);
+		//bmp = Bitmap.createScaledBitmap(bmp, 320, 320, false);
 		bmp.compress(Bitmap.CompressFormat.PNG, 0, fOut);
 		try {
 			fOut.flush();
@@ -213,7 +214,9 @@ public class utils {
 		HttpClient client = new DefaultHttpClient(httparams);
 
 		Log.i("dabaupload", "Set remote URL...");
-		HttpPost post=new HttpPost("http://192.168.154.1:8000/");
+		HttpPost post=new HttpPost("http://www.dabanit.com/daba_server/");
+		//HttpPost post=new HttpPost("http://192.168.154.1:8000/");
+		
 		MultipartEntityBuilder entity = MultipartEntityBuilder.create();
 		entity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 		Log.i("dabaupload", "Adding file(s)...");

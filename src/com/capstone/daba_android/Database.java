@@ -111,6 +111,13 @@ public class Database extends SQLiteOpenHelper {
 
 		return videos.getCount();
 	}
+	
+	public Cursor getLatLng(){
+		SQLiteDatabase db = this.getReadableDatabase();
+		String query = "select lat, lng from " + LOCATIONS_TABLE;
+		Cursor c = db.rawQuery(query, null);
+		return c;
+	}
 
 	public String[] getCityCountryByVideo(String v_id){
 		SQLiteDatabase db = this.getReadableDatabase();
