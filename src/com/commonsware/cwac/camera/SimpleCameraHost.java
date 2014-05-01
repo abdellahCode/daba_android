@@ -81,7 +81,7 @@ public class SimpleCameraHost implements CameraHost {
         || CamcorderProfile.hasProfile(cameraId,
                                        CamcorderProfile.QUALITY_HIGH)) {
       recorder.setProfile(CamcorderProfile.get(cameraId,
-                                               CamcorderProfile.QUALITY_HIGH));
+                                               CamcorderProfile.QUALITY_480P));
     }
     else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
         && CamcorderProfile.hasProfile(cameraId,

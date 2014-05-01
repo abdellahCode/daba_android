@@ -24,7 +24,6 @@ public class FileCache {
         //String filename = URLEncoder.encode(url);
         File f = new File(cacheDir, filename);
         return f;
-        
     }
     
     public void clear(){

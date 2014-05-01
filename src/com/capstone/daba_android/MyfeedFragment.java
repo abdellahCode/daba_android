@@ -175,6 +175,7 @@ public class MyfeedFragment extends ListFragment {
 				Log.d("db", "the user ID: " + cursor.getString(cursor.getColumnIndex("user_id")));
 				Cursor user = db.getUser(cursor.getString(cursor.getColumnIndex("user_id")));
 				user.moveToFirst();
+				if(user.getCount()>0)
 				holder.userDetails.setText("By: " + user.getString(user.getColumnIndex("username")));
 				Log.d("db", "after sttext");
 				//Uri uri = Uri.parse("http://192.168.154.1:8000/media/" + cursor.getString(cursor.getColumnIndex("url")));

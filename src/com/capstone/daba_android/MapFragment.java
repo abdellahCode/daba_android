@@ -22,7 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.capstone.utils.Follow_Location;;
+import com.capstone.utils.Follow_Location;
+import com.capstone.utils.LocationService;
 
 public class MapFragment extends Fragment {
 	private GoogleMap map;
@@ -44,13 +45,7 @@ public class MapFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 	}
-
-	public void onResume(){
-		super.onResume();
-		mapview.onResume();
-		//centerMapOnMyLocation();
-		map.setMyLocationEnabled(true);
-		
+	public void refresh(){
 		Database db = new Database(getActivity());
 		LatLng location = null;
 		Cursor c = db.getLatLng();
@@ -60,7 +55,36 @@ public class MapFragment extends Fragment {
 			location = new LatLng(c.getDouble(c.getColumnIndex("lat")), c.getDouble(c.getColumnIndex("lng")));			
 			if(location == null)
 				Log.d("map", "it is null");
-			map.addMarker(new MarkerOptions().position(location).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
+			map.addMarker(new MarkerOptions().position(location).icon(BitmapDescriptorFactory.fromResource(R.drawable.pin)));
+		}
+	  }
+	
+	public void mapAnimation(){
+		LocationService ls = new LocationService(getActivity());
+		LatLng ll = new LatLng(ls.getLocation().getLatitude(), ls.getLocation().getLongitude());
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 24));
+		map.animateCamera(CameraUpdateFactory.zoomTo(14), 1000, null);	
+	}
+
+	public void onResume(){
+		super.onResume();
+		mapview.onResume();
+		//centerMapOnMyLocation();
+		map.setMyLocationEnabled(true);
+//		LocationService ls = new LocationService(getActivity());
+//		LatLng ll = new LatLng(ls.getLocation().getLatitude(), ls.getLocation().getLongitude());
+//		map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 24));
+//		map.animateCamera(CameraUpdateFactory.zoomTo(14), 1000, null);		
+		Database db = new Database(getActivity());
+		LatLng location = null;
+		Cursor c = db.getLatLng();
+		//c.moveToFirst();
+		while(c.moveToNext()){
+			Log.d("map", "latlng: " + c.getDouble(c.getColumnIndex("lat")) + " -- " + c.getDouble(c.getColumnIndex("lng")));
+			location = new LatLng(c.getDouble(c.getColumnIndex("lat")), c.getDouble(c.getColumnIndex("lng")));			
+			if(location == null)
+				Log.d("map", "it is null");
+			map.addMarker(new MarkerOptions().position(location).icon(BitmapDescriptorFactory.fromResource(R.drawable.pin)));
 		}
 		
 		builder = new AlertDialog.Builder(getActivity());
@@ -105,7 +129,7 @@ public class MapFragment extends Fragment {
 			public void onMapClick(LatLng point) {
 				// TODO Auto-generated method stub
 				Log.d("daba", "	click");
-				Toast.makeText(getActivity(), "That's a click XD", Toast.LENGTH_SHORT).show();					
+				//Toast.makeText(getActivity(), "That's a click XD", Toast.LENGTH_SHORT).show();					
 			}
 		});
 		

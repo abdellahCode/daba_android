@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#CCCCCC"
     android:orientation="vertical"
     android:padding="5dip"
     tools:context=".VideoSetData" >
@@ -10,20 +11,41 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dip"
-        android:layout_marginTop="15dip"
+        android:layout_marginTop="5dip"
         android:text="Video Title: " />
 
     <EditText
         android:id="@+id/videoTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Add a title" />
+        android:layout_marginBottom="8dip"
+        android:hint="Ex: #AUI campus #spring" />
+<TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        
+        android:layout_marginBottom="5dip"
+        android:text="Your thumbnail" />
+    <ImageView
+        android:id="@+id/thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="100dip"
+        android:src="@drawable/thumbnail" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="8dip"
+        android:layout_marginBottom="5dip"
+        android:text="Your location" />
 
     <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="match_parent"
         android:layout_height="100dip"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/mapsample" />
 
     <Button
         android:id="@+id/submit"
@@ -38,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:visibility="invisible"
-        android:layout_marginTop="20dip" />
+        android:layout_marginTop="20dip"
+        android:visibility="invisible" />
 
 </LinearLayout>

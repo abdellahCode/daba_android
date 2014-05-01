@@ -9,13 +9,6 @@
          />
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/cancel" />
-
-    <ImageButton
         android:id="@+id/next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

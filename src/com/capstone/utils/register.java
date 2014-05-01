@@ -68,15 +68,15 @@ public class register extends AsyncTask<String, Integer, String>{
 		//HttpPost httppost = new HttpPost("http://192.168.154.1:8000/login/");
 		HttpPost httppost=new HttpPost("http://www.dabanit.com/daba_server/register/");
 		//HttpPost httppost = new HttpPost("http://127.0.0.1:8000/login/");
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);  
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);  
 		nameValuePairs.add(new BasicNameValuePair("username", params[0]));  
-		nameValuePairs.add(new BasicNameValuePair("firstName", params[1])); 
-		nameValuePairs.add(new BasicNameValuePair("lastName", params[2]));
-		nameValuePairs.add(new BasicNameValuePair("email", params[3]));
-		nameValuePairs.add(new BasicNameValuePair("password", params[4]));
-		nameValuePairs.add(new BasicNameValuePair("city", params[5]));
-		nameValuePairs.add(new BasicNameValuePair("country", params[6]));
-		nameValuePairs.add(new BasicNameValuePair("birthdate", "1991-1-1"));
+		//nameValuePairs.add(new BasicNameValuePair("firstName", params[1])); 
+		//nameValuePairs.add(new BasicNameValuePair("lastName", params[2]));
+		nameValuePairs.add(new BasicNameValuePair("email", params[1]));
+		nameValuePairs.add(new BasicNameValuePair("password", params[2]));
+		//nameValuePairs.add(new BasicNameValuePair("city", params[5]));
+		//nameValuePairs.add(new BasicNameValuePair("country", params[6]));
+		//nameValuePairs.add(new BasicNameValuePair("birthdate", "1991-1-1"));
 
 
 		try {
@@ -100,7 +100,7 @@ public class register extends AsyncTask<String, Integer, String>{
 
 		}
 		finally{
-			//httpclient.getConnectionManager().shutdown();
+			httpclient.getConnectionManager().shutdown();
 		}
 		BufferedReader rd = null;
 		Log.i("Login", "before status");
@@ -112,16 +112,8 @@ public class register extends AsyncTask<String, Integer, String>{
 			Log.i("Login", "No status code, network problem");
 		}
 		Log.i("Login", "after status: "+statusCode);
-		if(statusCode == 401){
-			Log.i("Login", "401");
-			returned = "USER_PASS_WRONG";			
-		}
-		else if(statusCode == 403){
-			Log.i("Login", "403");
-			returned = "API_KEY_CHANGED";
-		}
-		else if(statusCode == 200){
-			Log.i("Login", "200");
+		if(statusCode == 200){
+			Log.i("register", "200");
 			try {
 				rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 			} catch (IllegalStateException e) {
@@ -131,7 +123,7 @@ public class register extends AsyncTask<String, Integer, String>{
 
 				e.printStackTrace();
 			}catch(NullPointerException n){
-				Log.i("Login", "NULL in RESPONSE");
+				Log.i("register", "NULL in RESPONSE");
 
 			}
 			try {
@@ -148,35 +140,28 @@ public class register extends AsyncTask<String, Integer, String>{
 				Log.i("Login", "NULL RESPONSE");
 
 			}}
-		Log.i("login", "before returning: "+returned);
-		return returned;
+		Log.i("register", "before returning: "+returned);
+		return statusCode+"";
 	}
 
 
 
 	@Override
 	protected void onPostExecute(String result) {
-		JSONObject json = null;
-		String registerStatus;
-		try {
-			json = new JSONObject(result);
-			registerStatus = (String) json.get("registerStatus");
-			Log.i("register","this is the registerStatus: "+result);
-			if(registerStatus.equalsIgnoreCase("success")){
+
+			if(result.equalsIgnoreCase("200")){
 				Toast.makeText(context, "registered", Toast.LENGTH_LONG).show();
 				this.registerActivity.finish();
-				Intent i = new Intent(context, LoginActivity.class);				
+				Intent i = new Intent(context, LoginActivity.class);	
+				i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(i);
 			}
-			else
+			else if(result.equalsIgnoreCase("400")){
 				Toast.makeText(context, "registration error", Toast.LENGTH_LONG).show();
-
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Toast.makeText(context, "registeration error", Toast.LENGTH_LONG).show();
-		}
-
+			}
+			else{
+				Toast.makeText(context, "registration error", Toast.LENGTH_LONG).show();
+			}
 		if(pd != null)
 			pd.dismiss();
 

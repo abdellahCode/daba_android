@@ -15,20 +15,6 @@
         android:hint="username" />
 
     <EditText
-        android:id="@+id/firstname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
-        android:hint="firstname" />
-
-    <EditText
-        android:id="@+id/lastname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
-        android:hint="lastname" />
-
-    <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,20 +29,6 @@
         android:layout_marginTop="10dip"
         android:inputType="textVisiblePassword"
         android:hint="password" />
-
-    <EditText
-        android:id="@+id/city"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
-        android:hint="city" />
-
-    <EditText
-        android:id="@+id/country"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
-        android:hint="country" />
 
     <Button
         android:id="@+id/register"

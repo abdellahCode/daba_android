@@ -2,56 +2,97 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#CCCCCC"
     android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="18dip"
+        android:layout_marginTop="3dip"
+        android:text="INFORMATION"
+        android:textSize="10dp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dip"
+        android:background="#FFFFFF"
+        android:src="@drawable/user" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:layout_height="fill_parent"
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="5dip"
+        android:background="#FFFFFF"
+        android:orientation="vertical" >
 
-        <ImageButton
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/user" />
+            android:text="Full Name:"
+            android:textColor="#0E46AA"
+            android:textSize="16dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" 
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/firstname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Abdellah "
+                android:textSize="18dip" />
+
+            <TextView
+                android:id="@+id/lastname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ben Hammou"
+                android:textSize="18dip" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:text="Username:"
+            android:textColor="#0E46AA"
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="username"
-            android:textSize="24dip" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+            android:text="Abdellah"
+            android:textSize="16dip" />
 
         <TextView
-            android:id="@+id/firstname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dip"
-            android:layout_weight="1"
-            android:text="firstname"
-            android:textSize="22dip" />
+            android:text="Email"
+            android:textColor="#0E46AA"
+            android:textSize="16dp" />
 
         <TextView
-            android:id="@+id/lastname"
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dip"
-            android:layout_weight="1"
-            android:text="lastname"
-            android:textSize="22dip" />
-    </LinearLayout>
+            android:text="my.abdellah.benhammou@gmail.com"
+            android:textSize="16dip" />
 
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Logout!" />
+        <Button
+            android:id="@+id/logout"
+            android:layout_marginTop="30dip"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dip"
+            android:layout_marginRight="8dip"
+            android:background="@drawable/loginbutton"
+            android:text="Logout!" />
+    </LinearLayout>
 
 </LinearLayout>

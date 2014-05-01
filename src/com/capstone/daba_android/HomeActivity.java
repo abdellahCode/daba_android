@@ -10,6 +10,7 @@ import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -29,9 +31,11 @@ public class HomeActivity extends Activity implements OnTabChangeListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.feed_layout);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		setContentView(R.layout.feed_layout);	
 		context = this;
-		
+		ActionBar bar = getActionBar();
+		bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2565C7")));
 
 		tabhost = (TabHost)findViewById(R.id.tabhost);
 		tabhost.setup();
@@ -61,7 +65,7 @@ public class HomeActivity extends Activity implements OnTabChangeListener{
 		Spec.setContent(R.id.tab4);
 		Spec.setIndicator("Locations");
 		tabhost.addTab(Spec);
-		
+
 		tabhost.setOnTabChangedListener(new OnTabChangeListener() {
 
 			@Override
@@ -89,6 +93,29 @@ public class HomeActivity extends Activity implements OnTabChangeListener{
 				// TODO Auto-generated method stub
 				Log.i("daba", "haaa");
 				HomeActivity.this.startActivity(new Intent(HomeActivity.this, RecordingActivity.class));
+			}
+		});
+
+		tw.getChildAt(2).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Log.i("daba", "haaaha");
+				tabhost.setCurrentTab(2);
+				PersonalFragment pf = (PersonalFragment) getFragmentManager().findFragmentById(R.id.personal_fragment);
+				pf.refresh();
+			}
+		});
+		tw.getChildAt(3).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Log.i("daba", "haaaha");
+				tabhost.setCurrentTab(3);
+				MapFragment mf = (MapFragment) getFragmentManager().findFragmentById(R.id.map_container);
+				mf.mapAnimation();
 			}
 		});
 	}
@@ -123,13 +150,15 @@ public class HomeActivity extends Activity implements OnTabChangeListener{
 		menu.clear();
 		if(tabhost.getCurrentTab() == 0){
 			Log.i("daba", "tab id: " + tabhost.getCurrentTab());
-			mi.inflate(R.menu.feed, menu);
+			mi.inflate(R.menu.feed, menu);			
 			menu.findItem(R.id.action_refresh).setOnMenuItemClickListener(new OnMenuItemClickListener() {
 				@Override
 				public boolean onMenuItemClick(MenuItem item) {
 					//refresh code...
+					//setProgressBarIndeterminateVisibility(true); 
+
 					DefaultFeed df = new DefaultFeed((ListFragment) getFragmentManager().findFragmentById(R.id.feedfragment), context, null);
-					df.execute("");					
+					df.execute("");	
 					return true;
 				}
 			});

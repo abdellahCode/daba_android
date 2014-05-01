@@ -20,6 +20,7 @@ import org.apache.http.params.HttpParams;
 
 import com.capstone.daba_android.Database;
 import com.capstone.daba_android.HomeActivity;
+import com.capstone.daba_android.MapFragment;
 import com.capstone.daba_android.R;
 
 
@@ -32,6 +33,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+
 import org.json.*;
 
 import android.widget.ListAdapter;
@@ -62,6 +65,7 @@ public class DefaultFeed extends AsyncTask<String, Integer, String>{
 		pd.setIndeterminate(true);
 		pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		//pd.show();
+		myfeedfragment.getActivity().setProgressBarIndeterminateVisibility(true);
 	}
 	/*Construct the HTTP request, load parameters and execute it, read HTTP response, and decicde on the next action*/
 	@Override
@@ -160,21 +164,35 @@ public class DefaultFeed extends AsyncTask<String, Integer, String>{
 				db.deleteVideos();
 				db.addVideos(json);
 				Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
+				myfeedfragment.getActivity().setProgressBarIndeterminateVisibility(false);
 				if(pd != null)
 					pd.dismiss();
 				Cursor c = db.getVideos();
+				
 				ListAdapter la = new MyCursorLoader(myfeedfragment.getActivity(), R.layout.feed_row, c, new String[] {"title", "url"},
 						new int[]{R.id.title, R.id.url});
+				
 				myfeedfragment.setListAdapter(la);
 				myfeedfragment.getListView().invalidateViews();
 				myfeedfragment.setListAdapter(la);
 				myfeedfragment.getListView().setFocusable(false);
-			} catch (JSONException e) {
+				MapFragment mf = (MapFragment) myfeedfragment.getActivity().getFragmentManager().findFragmentById(R.id.map_container);
+				mf.refresh();
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				if(pd != null)
 					//pd.dismiss();
+				try{
+				myfeedfragment.getActivity().setProgressBarIndeterminateVisibility(false);
+				
+				MapFragment mf = (MapFragment) myfeedfragment.getActivity().getFragmentManager().findFragmentById(R.id.map_container);
+				mf.refresh();
 				e.printStackTrace();
 				Toast.makeText(context, "Network problem..", Toast.LENGTH_LONG).show();
+				}
+				catch(NullPointerException a){
+					
+				}
 			}
 			
 				

@@ -1,5 +1,7 @@
 package com.capstone.utils;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -18,6 +20,8 @@ import java.net.URL;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -43,6 +47,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -216,14 +221,17 @@ public class utils {
 		Log.i("dabaupload", "Set remote URL...");
 		HttpPost post=new HttpPost("http://www.dabanit.com/daba_server/");
 		//HttpPost post=new HttpPost("http://192.168.154.1:8000/");
-		
+
 		MultipartEntityBuilder entity = MultipartEntityBuilder.create();
 		entity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 		Log.i("dabaupload", "Adding file(s)...");
 		FileBody video = new FileBody(new File(videoPath));
-		Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoPath,
-				MediaStore.Video.Thumbnails.MINI_KIND);
-		
+//		Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoPath,
+//				MediaStore.Video.Thumbnails.MINI_KIND);
+		MediaMetadataRetriever m = new MediaMetadataRetriever();
+		m.setDataSource(videoPath);
+		Bitmap thumb = m.getFrameAtTime();
+
 		String thumbnailPath = getThumbnail(thumb, videoName);
 		FileBody thumbnail = new FileBody(new File(thumbnailPath));
 		SharedPreferences sp = c.getSharedPreferences(c.getString(R.string.sharedPreferencesName), Context.MODE_PRIVATE);
@@ -232,15 +240,16 @@ public class utils {
 		String datetime = sdf.format(new java.util.Date());
 
 		Log.d("dabaupload", "Before sending: " + title + " -- " + lat + " -- " + lng + " -- " + sp.getString("user_id", "-1") + " -- " + datetime);
-
-		entity.addPart("docfile", video);
+		//entity.addBinaryBody("docfile", new File(videoPath));
+		//entity.addPart("docfile", video);
+		entity.addBinaryBody("docfile", new File(videoPath), ContentType.MULTIPART_FORM_DATA, videoName);
 		entity.addPart("thumb", thumbnail);
 		entity.addTextBody("title", title);
 		entity.addTextBody("lat", lat);
 		entity.addTextBody("lng", lng);
 		entity.addTextBody("id", sp.getString("user_id", "-1"));
 		entity.addTextBody("datetime", datetime);
-
+		
 		Log.i("dabaupload", "Set entity...");
 		post.setEntity(entity.build());
 		HttpResponse response = null;
@@ -269,6 +278,40 @@ public class utils {
 			return "000";
 		}
 		return response.getStatusLine().getStatusCode()+"";
+	}
+	
+	
+	
+	public void zip(String video, String zipFileName) 
+	  {  
+	        //_files is the path of the files which you want to make it zip
+
+	    try {
+	        BufferedInputStream origin = null;
+	        FileOutputStream dest = new FileOutputStream(zipFileName);
+	        ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
+	                dest));
+	        byte data[] = new byte[1024];
+
+	        
+	            Log.v("Compress", "Zipping: " + video);
+	            FileInputStream fi = new FileInputStream(video);
+	            origin = new BufferedInputStream(fi, 1024);
+
+	            ZipEntry entry = new ZipEntry(video.substring(video.lastIndexOf("/") + 1));
+	            out.putNextEntry(entry);
+	            int count;
+
+	            while ((count = origin.read(data, 0, 1024)) != -1) {
+	                out.write(data, 0, count);
+	            }
+	            origin.close();
+	        
+
+	        out.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 
 

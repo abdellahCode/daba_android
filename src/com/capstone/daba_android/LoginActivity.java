@@ -2,11 +2,14 @@ package com.capstone.daba_android;
 
 import com.capstone.utils.Login;
 import android.os.Bundle;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -21,6 +24,8 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		ActionBar bar = getActionBar();
+		bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2565C7")));
 		SharedPreferences sp = this.getSharedPreferences(getString(R.string.sharedPreferencesName), Context.MODE_PRIVATE);
 		String loginStatus = sp.getString("loginStatus", "Not Logged");
 		Log.i("daba", "the loginStatus: " + loginStatus);

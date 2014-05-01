@@ -7,16 +7,20 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -27,6 +31,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.mms.exif.ExifInterface.GpsTrackRef;
 import com.capstone.utils.*;
 
 public class VideoSetData extends Activity {
@@ -34,26 +40,42 @@ public class VideoSetData extends Activity {
 	String provider;
 	TextView loc;
 	EditText videoTitle;
-	String lat;
-	String lng;
+	String lat_;
+	String lng_;
 	UploadPost t;
 	Context context;
 	String decision = "NOT OK";
 	ProgressBar loading;
+	Button button;
+	ProgressDialog pd = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_video_set_data);
+		ActionBar bar = getActionBar();
+		bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0E46AA")));
 		final File currentVideo = utils.lastFileModified();
 		Toast.makeText(getApplicationContext(), "this is the file: " + currentVideo.getName(), Toast.LENGTH_SHORT).show();
 		Log.d("daba", "this is the file: " + currentVideo.getName());
 		context = this;
 		ImageView iv = (ImageView) findViewById(R.id.thumbnail);
 		Bitmap thumb = null;
+		LocationService ls = new LocationService(getApplicationContext());
+		if(ls.canGetLocation()){
+			lat_ = String.valueOf(ls.getLocation().getLatitude());
+			lng_ = String.valueOf(ls.getLocation().getLongitude());
+		}
+		else{
+			ls.showSettingsAlert();
+		}
+		
+		
+		
 		try {
-			thumb = ThumbnailUtils.createVideoThumbnail(currentVideo.getCanonicalPath(),
-					MediaStore.Images.Thumbnails.MINI_KIND);
-		} catch (IOException e1) {
+			MediaMetadataRetriever m = new MediaMetadataRetriever();
+			m.setDataSource(currentVideo.getAbsolutePath());
+			thumb = m.getFrameAtTime();
+		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
@@ -61,7 +83,7 @@ public class VideoSetData extends Activity {
 		iv.setImageBitmap(thumb);
 		videoTitle = (EditText) findViewById(R.id.videoTitle);
 		loading = (ProgressBar) findViewById(R.id.loading);
-		
+		button = (Button) findViewById(R.id.submit);
 		Button b = (Button) findViewById(R.id.submit);
 
 		b.setOnClickListener(new OnClickListener() {
@@ -73,19 +95,26 @@ public class VideoSetData extends Activity {
 
 				new AsyncTask<Void, String, String>(){
 					String response;
-					
+
 					@Override
 					protected void onPreExecute() {
 						super.onPreExecute();
-						Toast.makeText(context, "starting..", Toast.LENGTH_SHORT).show();
-						loading.setVisibility(View.VISIBLE);
+						//Toast.makeText(context, "starting..", Toast.LENGTH_SHORT).show();
+						//loading.setVisibility(View.VISIBLE);
+						//button.setEnabled(false);
+						pd = new ProgressDialog(context);
+						pd.setMessage("Posting..");
+						pd.setCancelable(false);
+						pd.setIndeterminate(true);
+						pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+						pd.show();
 					}
 					@Override
 					protected String doInBackground(Void... params) {
 						// TODO Auto-generated method stub
 						try {
-							response = utils.myUpload(currentVideo.getCanonicalPath(), currentVideo.getName(), VideoSetData.this, videoTitle.getText().toString(), lat, lng);
-							
+							response = utils.myUpload(currentVideo.getCanonicalPath(), currentVideo.getName(), VideoSetData.this, videoTitle.getText().toString(), lat_, lng_);
+
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -98,18 +127,20 @@ public class VideoSetData extends Activity {
 						Log.d("daba", "status code: " + result);
 						if(result.equals("200")){
 							decision = "OK";
-							Toast.makeText(context, "done", Toast.LENGTH_LONG).show();
+							pd.dismiss();
+							//Toast.makeText(context, "done", Toast.LENGTH_LONG).show();
 							Intent i = new Intent(context, HomeActivity.class);
 							i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							context.startActivity(i);
 							finish();
-							loading.setVisibility(View.INVISIBLE);
+							//loading.setVisibility(View.INVISIBLE);
 						}
 						else{
 							decision = "NOT OK";
 							Toast.makeText(context, "error uploading", Toast.LENGTH_LONG).show();
 							loading.setVisibility(View.INVISIBLE);
-							
+							button.setEnabled(true);
+							pd.dismiss();
 						}
 					}
 				}.execute();
@@ -119,51 +150,6 @@ public class VideoSetData extends Activity {
 
 	public void onResume(){
 		super.onResume();
-
-		new AsyncTask<String, String, String>(){
-
-			@Override
-			protected String doInBackground(String... params) {
-				// TODO Auto-generated method stub
-				lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-				Criteria c = new Criteria();
-				//Location l = lm.getLastKnownLocation(lm.getBestProvider(c, false));
-				Location l = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-				if(l!=null){
-					Log.d("daba", "workig..: " + l.getLatitude() + " -- and: " + l.getLongitude());
-					lat = l.getLatitude() + "";
-					lng = l.getLongitude() + "";
-				}
-
-				else
-					Log.d("daba", "sorry..");
-				return null;
-			}}.execute("");
-
-
-
-			//		lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-			//		if(!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-			//			Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-			//			  startActivity(intent);
-			//		}
-			//		
-			//		Criteria criteria = new Criteria();
-			//		
-			//		provider = lm.getBestProvider(criteria, false);
-			//		Location location = lm.getLastKnownLocation(provider);
-			//		
-			//		if(location != null){
-			//			Log.i("daba", "provider selected: " + provider);
-			//			Toast.makeText(getApplicationContext(), "workig..: " + location.getLatitude() + " -- and: " + location.getLongitude(), Toast.LENGTH_SHORT).show();
-			//			//onLocationChanged(location);			
-			//		}
-			//		else{
-			//			Toast.makeText(getApplicationContext(), "sorry..", Toast.LENGTH_SHORT).show();
-			//			Log.i("daba", "not working...sorry for me");
-			//		}
-
-			//lm.requestLocationUpdates(provider, 400, 1, this);
 
 	}
 
@@ -180,35 +166,4 @@ public class VideoSetData extends Activity {
 		getMenuInflater().inflate(R.menu.video_set_data, menu);
 		return true;
 	}
-
-	//	@Override
-	//	public void onLocationChanged(Location location) {
-	//		// TODO Auto-generated method stub
-	//		double lat = location.getLatitude();
-	//		double lng = location.getLongitude();
-	//		loc.setText("lat: " + String.valueOf(lat) + " -- and lng: " + String.valueOf(lng));
-	//	}
-	//
-	//	@Override
-	//	public void onProviderDisabled(String provider) {
-	//		// TODO Auto-generated method stub
-	//		Toast.makeText(this, "Disabled provider " + provider,
-	//		        Toast.LENGTH_SHORT).show();
-	//	}
-	//
-	//	@Override
-	//	public void onProviderEnabled(String provider) {
-	//		// TODO Auto-generated method stub
-	//		Toast.makeText(this, "Enabled new provider " + provider,
-	//		        Toast.LENGTH_SHORT).show();
-	//	}
-	//
-	//	@Override
-	//	public void onStatusChanged(String provider, int status, Bundle extras) {
-	//		// TODO Auto-generated method stub
-	//		
-	//	}
-
-
-
 }

@@ -1,5 +1,9 @@
 package com.capstone.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -39,6 +43,7 @@ public class MyCursorLoader extends SimpleCursorAdapter{
 		public ImageView iv;
 		public ImageView info;
 		public TextView userDetails;
+		public TextView datetime;
 	}
 
 	@Override
@@ -55,6 +60,7 @@ public class MyCursorLoader extends SimpleCursorAdapter{
 				holder.city = (TextView) view.findViewById(R.id.city);
 				holder.country = (TextView) view.findViewById(R.id.country);
 				holder.url = (TextView) view.findViewById(R.id.url);
+				holder.datetime = (TextView) view.findViewById(R.id.datetime);
 				holder.userDetails = (TextView) view.findViewById(R.id.userDetails);
 				holder.iv = (ImageView) view.findViewById(R.id.thumb);
 				//holder.vv = (VideoView) view.findViewById(R.id.video);
@@ -64,8 +70,17 @@ public class MyCursorLoader extends SimpleCursorAdapter{
 			} else {
 				holder = (ViewHolder) view.getTag();
 			}
-
-
+			Date date = null;
+			try {
+				date = new SimpleDateFormat("yyy-MM-dd HH:mm:ss").parse(cursor.getString(cursor.getColumnIndex("datetime")).replace("T", " ").replace("Z", ""));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Log.d("date", "not working");
+			}
+			long datetime = date.getTime();
+			String timenow = android.text.format.DateUtils.getRelativeTimeSpanString(datetime).toString();
+			holder.datetime.setText(timenow);
 			holder.title.setText(cursor.getString(cursor.getColumnIndex("title")));
 			holder.url.setText(cursor.getString(cursor.getColumnIndex("url")));
 			final String url = cursor.getString(cursor.getColumnIndex("url"));

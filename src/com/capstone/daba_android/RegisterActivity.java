@@ -21,12 +21,12 @@ public class RegisterActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
 		final EditText username = (EditText) findViewById(R.id.username);
-		final EditText firstname = (EditText) findViewById(R.id.firstname);
-		final EditText lastname = (EditText) findViewById(R.id.lastname);
+		//final EditText firstname = (EditText) findViewById(R.id.firstname);
+		//final EditText lastname = (EditText) findViewById(R.id.lastname);
 		final EditText email = (EditText) findViewById(R.id.email);
 		final EditText password = (EditText) findViewById(R.id.password);
-		final EditText city = (EditText) findViewById(R.id.city);
-		final EditText country = (EditText) findViewById(R.id.country);
+		//final EditText city = (EditText) findViewById(R.id.city);
+		//final EditText country = (EditText) findViewById(R.id.country);
 		
 		Button register  = (Button) findViewById(R.id.register);
 		register.setOnClickListener(new OnClickListener() {
@@ -34,14 +34,14 @@ public class RegisterActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String[] new_user = new String[7];
+				String[] new_user = new String[3];
 				new_user[0] = username.getText().toString();
-				new_user[1] = firstname.getText().toString();
-				new_user[2] = lastname.getText().toString();
-				new_user[3] = email.getText().toString();
-				new_user[4] = password.getText().toString();
-				new_user[5] = city.getText().toString();
-				new_user[6] = country.getText().toString();
+				//new_user[1] = firstname.getText().toString();
+				//new_user[2] = lastname.getText().toString();
+				new_user[1] = email.getText().toString();
+				new_user[2] = password.getText().toString();
+				//new_user[5] = city.getText().toString();
+				//new_user[6] = country.getText().toString();
 				
 				com.capstone.utils.register send_new_user = new com.capstone.utils.register(RegisterActivity.this, getApplicationContext(), null);
 				send_new_user.execute(new_user);

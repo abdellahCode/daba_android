@@ -152,7 +152,8 @@ public class Database extends SQLiteOpenHelper {
 		Cursor c = db.rawQuery(query, null);
 		Log.d("db", "the count: " + c.getCount());
 		c.moveToFirst();
-		Log.d("db", "the user: " + c.getString(c.getColumnIndex("username")));
+		if(c.getCount()>0)
+			Log.d("db", "the user: " + c.getString(c.getColumnIndex("username")));
 		
 		return c;
 	}

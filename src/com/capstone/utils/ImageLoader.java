@@ -38,8 +38,10 @@ public class ImageLoader {
     {
         imageViews.put(imageView, url);
         Bitmap bitmap=memoryCache.get(url);
-        if(bitmap!=null)
-            imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 310, 310, false));
+        if(bitmap!=null){
+//            imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 310, 310, false));
+        	   imageView.setImageBitmap(bitmap);
+        }
         else
         {
             queuePhoto(url, imageView);
@@ -158,8 +160,10 @@ public class ImageLoader {
         {
             if(imageViewReused(photoToLoad))
                 return;
-            if(bitmap!=null)
-                photoToLoad.imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 310, 310, false));
+            if(bitmap!=null){
+//                photoToLoad.imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 310, 310, false));
+            	   photoToLoad.imageView.setImageBitmap(bitmap);
+            }
             else
                 photoToLoad.imageView.setImageResource(stub_id);
         }
